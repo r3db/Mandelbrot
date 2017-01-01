@@ -6,5 +6,6 @@ ehthumbs.db
 Desktop.ini
 
 src/.vs/
+src/packages/
 src/Mandelbrot/bin/
 src/Mandelbrot/obj/
