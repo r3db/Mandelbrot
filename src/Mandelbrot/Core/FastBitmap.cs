@@ -2,7 +2,7 @@ using System;
 using System.Drawing;
 using System.Drawing.Imaging;
 
-namespace Mandel
+namespace Mandelbrot
 {
     // Ignore the fact that we've not implemented IDisposable
     internal sealed class FastBitmap

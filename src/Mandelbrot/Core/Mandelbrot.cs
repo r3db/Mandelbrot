@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Threading.Tasks;
 
-namespace Mandel
+namespace Mandelbrot
 {
     internal static class Mandelbrot
     {

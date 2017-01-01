@@ -1,6 +1,6 @@
 using System;
 
-namespace Mandel
+namespace Mandelbrot
 {
     internal struct Complex
     {

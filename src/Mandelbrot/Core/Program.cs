@@ -2,13 +2,13 @@
 using System.Diagnostics;
 using System.Drawing.Imaging;
 
-namespace Mandel
+namespace Mandelbrot
 {
     internal static class Program
     {
         private static void Main()
         {
-            const string path = @"test1.png";
+            const string path = @"test.cpu.png";
             
             var bounds = new Bounds
             {

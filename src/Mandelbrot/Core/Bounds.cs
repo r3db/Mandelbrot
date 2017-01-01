@@ -1,4 +1,6 @@
-﻿namespace Mandel
+﻿using System;
+
+namespace Mandelbrot
 {
     internal struct Bounds
     {
