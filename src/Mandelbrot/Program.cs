@@ -20,26 +20,31 @@ namespace Mandelbrot
 
             var sw1 = Stopwatch.StartNew();
             var bmp1 = Mandelbrot.RenderCpu1(bounds);
+            Console.WriteLine("// CPU: Using Native GDI+ Bitmap!");
             Console.WriteLine("{0}s", sw1.Elapsed.TotalSeconds);
             bmp1.Save(@"test.cpu.1.png", ImageFormat.Png);
 
             var sw2 = Stopwatch.StartNew();
             var bmp2 = Mandelbrot.RenderCpu2(bounds);
+            Console.WriteLine("// CPU: Using byte Array!");
             Console.WriteLine("{0}s", sw2.Elapsed.TotalSeconds);
             bmp2.Save(@"test.cpu.2.png", ImageFormat.Png);
 
             var sw3 = Stopwatch.StartNew();
             var bmp3 = Mandelbrot.RenderGpu1(bounds);
+            Console.WriteLine("// GPU: Using byte Array! (Cold Run)");
             Console.WriteLine("{0}s", sw3.Elapsed.TotalSeconds);
             bmp3.Save(@"test.gpu.1.png", ImageFormat.Png);
 
             var sw4 = Stopwatch.StartNew();
             var bmp4 = Mandelbrot.RenderGpu1(bounds);
+            Console.WriteLine("// GPU: Using byte Array!");
             Console.WriteLine("{0}s", sw4.Elapsed.TotalSeconds);
             bmp4.Save(@"test.gpu.2.png", ImageFormat.Png);
 
             var sw5 = Stopwatch.StartNew();
             var bmp5 = Mandelbrot.RenderGpu2(bounds);
+            Console.WriteLine("// GPU: Allocating Memory on GPU only!");
             Console.WriteLine("{0}s", sw5.Elapsed.TotalSeconds);
             bmp5.Save(@"test.gpu.3.png", ImageFormat.Png);
 
