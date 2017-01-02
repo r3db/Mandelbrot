@@ -6,7 +6,7 @@ namespace Mandelbrot
     {
         // Todo: Should we promote these to Properties!?
         public int ViewportWidth;
-        public int ViewporHeight;
+        public int ViewportHeight;
 
         public float XMin;
         public float XMax;
@@ -15,16 +15,16 @@ namespace Mandelbrot
 
         public void AdjustAspectRatio()
         {
-            var vr = ViewporHeight / (float)ViewportWidth;
+            var vr = ViewportHeight / (float)ViewportWidth;
             var gr = (YMax - YMin) / (XMax - XMin);
 
             var xd = gr > vr
-                ? (ViewportWidth * ((YMax - YMin) / ViewporHeight) - (XMax - XMin)) * 0.5f
+                ? (ViewportWidth * ((YMax - YMin) / ViewportHeight) - (XMax - XMin)) * 0.5f
                 : 0f;
 
             var yd = gr > vr
                 ? 0f
-                : (ViewporHeight * ((XMax - XMin) / ViewportWidth) - (YMax - YMin)) * 0.5f;
+                : (ViewportHeight * ((XMax - XMin) / ViewportWidth) - (YMax - YMin)) * 0.5f;
 
             XMin -= xd;
             XMax += xd;
