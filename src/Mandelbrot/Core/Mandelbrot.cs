@@ -54,7 +54,7 @@ namespace Mandelbrot
                     var offset = 3 * (y * bounds.ViewportWidth + x);
                     var c = new Complex(bounds.XMin + x * scale, bounds.YMin + y * scale);
 
-                    ComputeMandelbrotAtOffset(result, offset, c);
+                    ComputeMandelbrotAtOffset(result, c, offset);
                 }
             });
 
@@ -81,7 +81,7 @@ namespace Mandelbrot
                     Imaginary = bounds.YMin + y * scale,
                 };
 
-                ComputeMandelbrotAtOffset(result, offset, c);
+                ComputeMandelbrotAtOffset(result, c, offset);
             }, lp);
 
             return FastBitmap.FromByteArray(result, bounds.ViewportWidth, bounds.ViewportHeight).Bitmap;
@@ -107,7 +107,7 @@ namespace Mandelbrot
                     Imaginary = bounds.YMin + y * scale,
                 };
 
-                ComputeMandelbrotAtOffset(deviceResult, offset, c);
+                ComputeMandelbrotAtOffset(deviceResult, c, offset);
             }, lp);
 
             var result = Gpu.CopyToHost(deviceResult);
@@ -115,7 +115,7 @@ namespace Mandelbrot
         }
 
         // ReSharper disable once SuggestBaseTypeForParameter
-        private static void ComputeMandelbrotAtOffset(byte[] result, int offset, Complex c)
+        private static void ComputeMandelbrotAtOffset(byte[] result, Complex c, int offset)
         {
             var z = c;
 
