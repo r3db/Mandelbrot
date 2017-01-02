@@ -24,7 +24,7 @@ namespace Mandelbrot
             Measure(() => Mandelbrot.RenderGpu1(bounds), "test.gpu.1.png", "GPU: Using byte Array!");
             Measure(() => Mandelbrot.RenderGpu2(bounds), "test.gpu.2.png", "GPU: Allocating Memory on GPU only!");
             Measure(() => Mandelbrot.RenderGpu3(bounds), "test.gpu.3.png", "GPU: Parallel.For!");
-            Measure(() => Mandelbrot.RenderGpu4(bounds), "test.gpu.4.png", "GPU: Multi-Device Parallel.For!");
+            //Measure(() => Mandelbrot.RenderGpu4(bounds), "test.gpu.4.png", "GPU: Multi-Device Parallel.For!");
 
             Console.WriteLine("Done!");
             Console.ReadLine();
