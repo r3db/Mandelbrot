@@ -43,7 +43,7 @@ namespace Mandelbrot
         // CPU: Using byte Array!
         internal static Image RenderCpu2(Bounds bounds)
         {
-            var result = new byte[bounds.ViewportWidth * bounds.ViewportHeight * 3];
+            var result = new byte[3 * bounds.ViewportWidth * bounds.ViewportHeight];
             bounds.AdjustAspectRatio();
             var scale = (bounds.XMax - bounds.XMin) / bounds.ViewportWidth;
 
@@ -64,7 +64,7 @@ namespace Mandelbrot
         // GPU: Using byte Array!
         internal static Image RenderGpu1(Bounds bounds)
         {
-            var result = new byte[bounds.ViewportWidth * bounds.ViewportHeight * 3];
+            var result = new byte[3 * bounds.ViewportWidth * bounds.ViewportHeight];
             bounds.AdjustAspectRatio();
             var scale = (bounds.XMax - bounds.XMin) / bounds.ViewportWidth;
             var lp = new LaunchParam(new dim3(bounds.ViewportWidth, bounds.ViewportHeight), new dim3(1));
@@ -90,7 +90,7 @@ namespace Mandelbrot
         // GPU: Allocating Memory on GPU only!
         internal static Image RenderGpu2(Bounds bounds)
         {
-            var deviceResult = Gpu.Default.Allocate<byte>(bounds.ViewportWidth * bounds.ViewportHeight * 3);
+            var deviceResult = Gpu.Default.Allocate<byte>(3 * bounds.ViewportWidth * bounds.ViewportHeight);
             bounds.AdjustAspectRatio();
             var scale = (bounds.XMax - bounds.XMin) / bounds.ViewportWidth;
             var lp = new LaunchParam(new dim3(bounds.ViewportWidth, bounds.ViewportHeight), new dim3(1));
