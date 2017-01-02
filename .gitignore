@@ -9,3 +9,5 @@ src/.vs/
 src/packages/
 src/Mandelbrot/bin/
 src/Mandelbrot/obj/
+*.DotSettings
+*.user
