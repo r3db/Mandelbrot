@@ -16,13 +16,13 @@ namespace Mandelbrot
         internal FastBitmap(int width, int height)
         {
             _bitmap = new Bitmap(width, height, PixelFormat);
-            _data = Bitmap.LockBits(new Rectangle(0, 0, width, height), ImageLockMode.ReadWrite, PixelFormat);
+            _data = _bitmap.LockBits(new Rectangle(0, 0, width, height), ImageLockMode.ReadWrite, PixelFormat);
         }
 
         // Todo: Fix!
         //~FastBitmap()
         //{
-        //    Bitmap.UnlockBits(_data);
+        //    _bitmap.UnlockBits(_data);
         //}
 
         internal static Image FromByteArray(byte[] data, int width, int height)
