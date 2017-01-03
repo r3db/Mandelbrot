@@ -71,9 +71,9 @@ namespace Mandelbrot
 
             Gpu.Default.Launch(() =>
             {
-                var x = blockIdx.x;
-                var y = blockIdx.y;
-                var offset = 3 * (y * gridDim.x + x);
+                var x = blockDim.x * blockIdx.x + threadIdx.x;
+                var y = blockDim.y * blockIdx.y + threadIdx.y;
+                var offset = 3 * (y * bounds.ViewportWidth + x);
 
                 var c = new Complex
                 {
@@ -97,9 +97,9 @@ namespace Mandelbrot
 
             Gpu.Default.Launch(() =>
             {
-                var x = blockIdx.x;
-                var y = blockIdx.y;
-                var offset = 3 * (y * gridDim.x + x);
+                var x = blockDim.x * blockIdx.x + threadIdx.x;
+                var y = blockDim.y * blockIdx.y + threadIdx.y;
+                var offset = 3 * (y * bounds.ViewportWidth + x);
 
                 var c = new Complex
                 {
@@ -138,6 +138,7 @@ namespace Mandelbrot
             return FastBitmap.FromByteArray(result, bounds.ViewportWidth, bounds.ViewportHeight);
         }
 
+        // Todo: Test!
         // GPU: Multi-Device Parallel.For!
         [GpuManaged]
         internal static Image RenderGpu4(Bounds bounds)
