@@ -1,6 +1,5 @@
 using System;
 using System.Drawing;
-using System.Linq;
 using System.Threading.Tasks;
 using Alea;
 using Alea.CSharp;
@@ -134,43 +133,6 @@ namespace Mandelbrot
 
                 ComputeJuliaSetAtOffset(result, c, offset);
             });
-
-            return FastBitmap.FromByteArray(result, bounds.ViewportWidth, bounds.ViewportHeight);
-        }
-
-        // GPU: Multi-Device Parallel.For!
-        [GpuManaged]
-        internal static Image RenderGpu4(Bounds bounds)
-        {
-            bounds.AdjustAspectRatio();
-            var scale = (bounds.XMax - bounds.XMin) / bounds.ViewportWidth;
-
-            var devices = Device.Devices.Select(device => Gpu.Get((int) device.Id)).ToList();
-            var size = (int)Math.Ceiling(bounds.ViewportWidth * bounds.ViewportHeight / (float)devices.Count);
-
-            var result = devices.Select((gpu, k) =>
-                {
-                    var partial = new byte[3 * size];
-
-                    gpu.For(0, size, i =>
-                    {
-                        var x = i * k * size % bounds.ViewportWidth;
-                        var y = i * k * size / bounds.ViewportWidth;
-                        var offset = 3 * i;
-
-                        var c = new Complex
-                        {
-                            Real      = bounds.XMin + x * scale,
-                            Imaginary = bounds.YMin + y * scale,
-                        };
-
-                        ComputeJuliaSetAtOffset(partial, c, offset);
-                    });
-
-                    return partial;
-                })
-                .SelectMany(x => x)
-                .ToArray();
 
             return FastBitmap.FromByteArray(result, bounds.ViewportWidth, bounds.ViewportHeight);
         }
