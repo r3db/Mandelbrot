@@ -77,6 +77,7 @@
     <Compile Include="Core\Bounds.cs" />
     <Compile Include="Core\Complex.cs" />
     <Compile Include="Core\FastBitmap.cs" />
+    <Compile Include="Core\Julia.cs" />
     <Compile Include="Core\Mandelbrot.cs" />
     <Compile Include="Program.cs" />
   </ItemGroup>

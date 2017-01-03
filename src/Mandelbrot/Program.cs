@@ -11,20 +11,27 @@ namespace Mandelbrot
         {
             var bounds = new Bounds
             {
-                ViewportWidth  = 2 * 1920,
-                ViewportHeight = 2 * 960,
+                ViewportWidth  = 6 * 1920,
+                ViewportHeight = 6 * 960,
                 XMin = -2.2f,
                 XMax = +1.0f,
                 YMin = -1.0f,
                 YMax = +1.0f,
             };
 
-            Measure(() => Mandelbrot.RenderCpu1(bounds), "test.cpu.1.png", "CPU: Using Native GDI+ Bitmap!");
-            Measure(() => Mandelbrot.RenderCpu2(bounds), "test.cpu.2.png", "CPU: Using byte Array!");
-            Measure(() => Mandelbrot.RenderGpu1(bounds), "test.gpu.1.png", "GPU: Using byte Array!");
-            Measure(() => Mandelbrot.RenderGpu2(bounds), "test.gpu.2.png", "GPU: Allocating Memory on GPU only!");
-            Measure(() => Mandelbrot.RenderGpu3(bounds), "test.gpu.3.png", "GPU: Parallel.For!");
-            //Measure(() => Mandelbrot.RenderGpu4(bounds), "test.gpu.4.png", "GPU: Multi-Device Parallel.For!");
+            Measure(() => Mandelbrot.RenderCpu1(bounds), "mandelbrot.cpu.1.png", "CPU: (Mandelbrot) Using Native GDI+ Bitmap!");
+            Measure(() => Mandelbrot.RenderCpu2(bounds), "mandelbrot.cpu.2.png", "CPU: (Mandelbrot) Using byte Array!");
+            Measure(() => Mandelbrot.RenderGpu1(bounds), "mandelbrot.gpu.1.png", "GPU: (Mandelbrot) Using byte Array!");
+            Measure(() => Mandelbrot.RenderGpu2(bounds), "mandelbrot.gpu.2.png", "GPU: (Mandelbrot) Allocating Memory on GPU only!");
+            Measure(() => Mandelbrot.RenderGpu3(bounds), "mandelbrot.gpu.3.png", "GPU: (Mandelbrot) Parallel.For!");
+            //Measure(() => Mandelbrot.RenderGpu4(bounds), "mandelbrot.gpu.4.png", "GPU: (Mandelbrot) Multi-Device Parallel.For!");
+
+            Measure(() => Julia.RenderCpu1(bounds), "julia.cpu.1.png", "CPU: (Julia) Using Native GDI+ Bitmap!");
+            Measure(() => Julia.RenderCpu2(bounds), "julia.cpu.2.png", "CPU: (Julia) Using byte Array!");
+            Measure(() => Julia.RenderGpu1(bounds), "julia.gpu.1.png", "GPU: (Julia) Using byte Array!");
+            Measure(() => Julia.RenderGpu2(bounds), "julia.gpu.2.png", "GPU: (Julia) Allocating Memory on GPU only!");
+            Measure(() => Julia.RenderGpu3(bounds), "julia.gpu.3.png", "GPU: (Julia) Parallel.For!");
+            //Measure(() => Julia.RenderGpu4(bounds), "julia.gpu.4.png", "GPU: (Julia) Multi-Device Parallel.For!");
 
             Console.WriteLine("Done!");
             Console.ReadLine();
