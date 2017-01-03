@@ -66,14 +66,14 @@ namespace Mandelbrot
         {
             var result = new byte[3 * bounds.ViewportWidth * bounds.ViewportHeight];
             bounds.AdjustAspectRatio();
+            var lp = ComputeLaunchParameters(bounds);
             var scale = (bounds.XMax - bounds.XMin) / bounds.ViewportWidth;
-            var lp = new LaunchParam(new dim3(bounds.ViewportWidth, bounds.ViewportHeight), new dim3(1));
 
             Gpu.Default.Launch(() =>
             {
-                var x = blockIdx.x;
-                var y = blockIdx.y;
-                var offset = 3 * (y * gridDim.x + x);
+                var x = blockDim.x * blockIdx.x + threadIdx.x;
+                var y = blockDim.y * blockIdx.y + threadIdx.y;
+                var offset = 3 * (y * bounds.ViewportWidth + x);
 
                 var a = new Complex
                 {
@@ -92,14 +92,14 @@ namespace Mandelbrot
         {
             var deviceResult = Gpu.Default.Allocate<byte>(3 * bounds.ViewportWidth * bounds.ViewportHeight);
             bounds.AdjustAspectRatio();
+            var lp = ComputeLaunchParameters(bounds);
             var scale = (bounds.XMax - bounds.XMin) / bounds.ViewportWidth;
-            var lp = new LaunchParam(new dim3(bounds.ViewportWidth, bounds.ViewportHeight), new dim3(1));
 
             Gpu.Default.Launch(() =>
             {
-                var x = blockIdx.x;
-                var y = blockIdx.y;
-                var offset = 3 * (y * gridDim.x + x);
+                var x = blockDim.x * blockIdx.x + threadIdx.x;
+                var y = blockDim.y * blockIdx.y + threadIdx.y;
+                var offset = 3 * (y * bounds.ViewportWidth + x);
 
                 var c = new Complex
                 {
@@ -196,6 +196,14 @@ namespace Mandelbrot
                     break;
                 }
             }
+        }
+
+        private static LaunchParam ComputeLaunchParameters(Bounds bounds)
+        {
+            const int tpb = 32;
+            var width = bounds.ViewportWidth;
+            var height = bounds.ViewportHeight;
+            return new LaunchParam(new dim3((width + (tpb - 1)) / tpb, (height + (tpb - 1)) / tpb), new dim3(tpb, tpb));
         }
     }
 }

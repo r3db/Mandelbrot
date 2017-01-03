@@ -11,3 +11,5 @@ src/Mandelbrot/bin/
 src/Mandelbrot/obj/
 *.DotSettings
 *.user
+src/Mandelbrot/mandelbrot.cpu.1.png
+src/Mandelbrot/mandelbrot.cpu.2.png
