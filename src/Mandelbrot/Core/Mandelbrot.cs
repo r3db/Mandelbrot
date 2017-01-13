@@ -89,7 +89,10 @@ namespace Mandelbrot
         // GPU: Allocating Memory on GPU only!
         internal static Image RenderGpu2(Bounds bounds)
         {
-            var deviceResult = Gpu.Default.Allocate<byte>(3 * bounds.ViewportWidth * bounds.ViewportHeight);
+            var resultLength = 3 * bounds.ViewportWidth * bounds.ViewportHeight;
+            var resultMemory = Gpu.Default.AllocateDevice<byte>(resultLength);
+            var resultDevPtr = new deviceptr<byte>(resultMemory.Handle);
+
             bounds.AdjustAspectRatio();
             var lp = ComputeLaunchParameters(bounds);
             var scale = (bounds.XMax - bounds.XMin) / bounds.ViewportWidth;
@@ -100,16 +103,21 @@ namespace Mandelbrot
                 var y = blockDim.y * blockIdx.y + threadIdx.y;
                 var offset = 3 * (y * bounds.ViewportWidth + x);
 
+                if (offset >= resultLength)
+                {
+                    return;
+                }
+
                 var c = new Complex
                 {
                     Real      = bounds.XMin + x * scale,
                     Imaginary = bounds.YMin + y * scale,
                 };
 
-                ComputeMandelbrotAtOffset(deviceResult, c, offset);
+                ComputeMandelbrotAtOffset2(resultDevPtr, c, offset);
             }, lp);
 
-            return FastBitmap.FromByteArray(Gpu.CopyToHost(deviceResult), bounds.ViewportWidth, bounds.ViewportHeight);
+            return FastBitmap.FromByteArray(Gpu.CopyToHost(resultMemory), bounds.ViewportWidth, bounds.ViewportHeight);
         }
 
         // GPU: Parallel.For!
@@ -139,6 +147,24 @@ namespace Mandelbrot
 
         // ReSharper disable once SuggestBaseTypeForParameter
         private static void ComputeMandelbrotAtOffset(byte[] result, Complex c, int offset)
+        {
+            var z = c;
+
+            for (byte i = 0; i < 255; ++i)
+            {
+                z = z * z + c;
+
+                if (z.Magnitude() >= 2)
+                {
+                    result[offset + 0] = i;
+                    result[offset + 1] = i;
+                    result[offset + 2] = i;
+                    break;
+                }
+            }
+        }
+
+        private static void ComputeMandelbrotAtOffset2(deviceptr<byte> result, Complex c, int offset)
         {
             var z = c;
 
