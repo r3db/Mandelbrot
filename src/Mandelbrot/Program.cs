@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
+using System.Globalization;
 
 namespace Mandelbrot
 {
@@ -33,51 +34,58 @@ namespace Mandelbrot
                 YMax = +1.0f,
             };
 
-            Measure(() => Mandelbrot.RenderCpu1(bounds1), "mandelbrot.cpu.1.png", "CPU: (Mandelbrot) Using Native GDI+ Bitmap!");
-            Measure(() => Mandelbrot.RenderCpu2(bounds1), "mandelbrot.cpu.2.png", "CPU: (Mandelbrot) Using byte Array!");
-            Measure(() => Mandelbrot.RenderGpu1(bounds1), "mandelbrot.gpu.1.png", "GPU: (Mandelbrot) Using byte Array!");
-            Measure(() => Mandelbrot.RenderGpu2(bounds1), "mandelbrot.gpu.2.png", "GPU: (Mandelbrot) Allocating Memory on GPU only!");
-            Measure(() => Mandelbrot.RenderGpu3(bounds1), "mandelbrot.gpu.3.png", "GPU: (Mandelbrot) Parallel.For!");
+            Measure(() => Mandelbrot.RenderCpu1(bounds1), "mandelbrot.cpu.1.png", false, "CPU: (Mandelbrot) Using Native GDI+ Bitmap!");
+            Measure(() => Mandelbrot.RenderCpu2(bounds1), "mandelbrot.cpu.2.png", false, "CPU: (Mandelbrot) Using byte Array!");
+            Measure(() => Mandelbrot.RenderGpu1(bounds1), "mandelbrot.gpu.1.png", true, "GPU: (Mandelbrot) Using byte Array!");
+            Measure(() => Mandelbrot.RenderGpu2(bounds1), "mandelbrot.gpu.2.png", true, "GPU: (Mandelbrot) Allocating Memory on GPU only!");
+            Measure(() => Mandelbrot.RenderGpu3(bounds1), "mandelbrot.gpu.3.png", true, "GPU: (Mandelbrot) Parallel.For!");
 
-            Measure(() => Julia.RenderCpu1(bounds2), "julia.cpu.1.png", "CPU: (Julia) Using Native GDI+ Bitmap!");
-            Measure(() => Julia.RenderCpu2(bounds2), "julia.cpu.2.png", "CPU: (Julia) Using byte Array!");
-            Measure(() => Julia.RenderGpu1(bounds2), "julia.gpu.1.png", "GPU: (Julia) Using byte Array!");
-            Measure(() => Julia.RenderGpu2(bounds2), "julia.gpu.2.png", "GPU: (Julia) Allocating Memory on GPU only!");
-            Measure(() => Julia.RenderGpu3(bounds2), "julia.gpu.3.png", "GPU: (Julia) Parallel.For!");
+            Measure(() => Julia.RenderCpu1(bounds2), "julia.cpu.1.png", false, "CPU: (Julia) Using Native GDI+ Bitmap!");
+            Measure(() => Julia.RenderCpu2(bounds2), "julia.cpu.2.png", false, "CPU: (Julia) Using byte Array!");
+            Measure(() => Julia.RenderGpu1(bounds2), "julia.gpu.1.png", true, "GPU: (Julia) Using byte Array!");
+            Measure(() => Julia.RenderGpu2(bounds2), "julia.gpu.2.png", true, "GPU: (Julia) Allocating Memory on GPU only!");
+            Measure(() => Julia.RenderGpu3(bounds2), "julia.gpu.3.png", true, "GPU: (Julia) Parallel.For!");
 
             Console.WriteLine("Done!");
             Console.ReadLine();
         }
 
-        private static void Measure(Func<Image> func, string fileName, string description)
+        private static void Measure(Func<Image> func, string fileName, bool isGpu, string description)
         {
-            Func<Stopwatch, string> formatElapsedTime = (watch) => watch.Elapsed.TotalSeconds >= 1
-                ? $"{watch.Elapsed.TotalSeconds}s"
-                : $"{watch.ElapsedMilliseconds}ms";
+            const string format = "{0,9}";
+
+            Func<Stopwatch, string> formatElapsedTime = w => w.Elapsed.TotalSeconds >= 1
+                ? string.Format(CultureInfo.InvariantCulture, format + "  (s)", w.Elapsed.TotalSeconds)
+                : w.Elapsed.TotalMilliseconds >= 1
+                    ? string.Format(CultureInfo.InvariantCulture, format + " (ms)", w.Elapsed.TotalMilliseconds)
+                    : string.Format(CultureInfo.InvariantCulture, format + " (μs)", w.Elapsed.TotalMilliseconds * 1000);
+
+            Action consoleColor = () =>
+            {
+                Console.ForegroundColor = isGpu
+                    ? ConsoleColor.White
+                    : ConsoleColor.Cyan;
+            };
 
             var sw1 = Stopwatch.StartNew();
-            var bmp1 = func();
+            var result1 = func();
             sw1.Stop();
 
-            Console.WriteLine(new string('-', 43));
-            Console.WriteLine(description);
-            Console.ForegroundColor = ConsoleColor.Cyan;
-            Console.WriteLine("{0} [Cold]", formatElapsedTime(sw1));
-            Console.ResetColor();
-            bmp1.Save(fileName, ImageFormat.Png);
+            Func<Stopwatch, string> bandwidth = w => string.Format(CultureInfo.InvariantCulture, "{0,8:F4} GB/s", (result1.Width * result1.Height * 3) / (w.Elapsed.TotalMilliseconds * 1000000));
 
-            Console.WriteLine();
+            Console.WriteLine(new string('-', 49));
+            Console.WriteLine(description);
+            consoleColor();
+            Console.WriteLine("{0,9} - {1} - {2} [Cold]", result1, formatElapsedTime(sw1), bandwidth(sw1));
+            Console.ResetColor();
+            result1.Save(fileName, ImageFormat.Png);
 
             var sw2 = Stopwatch.StartNew();
-            func();
+            var result2 = func();
             sw2.Stop();
-            Console.WriteLine(description);
-            Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine("{0} [Warm]", formatElapsedTime(sw2));
+            consoleColor();
+            Console.WriteLine("{0,9} - {1} - {2} [Warm]", result2, formatElapsedTime(sw2), bandwidth(sw2));
             Console.ResetColor();
-
-            Console.WriteLine(new string('-', 43));
-            Console.WriteLine();
         }
     }
 }
