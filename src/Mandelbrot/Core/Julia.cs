@@ -57,7 +57,7 @@ namespace Mandelbrot
                 }
             });
 
-            return FastBitmap.FromByteArray(result, bounds.ViewportWidth, bounds.ViewportHeight);
+            return BitmapUtility.FromByteArray(result, bounds.ViewportWidth, bounds.ViewportHeight);
         }
 
         // GPU: Using byte Array!
@@ -83,7 +83,7 @@ namespace Mandelbrot
                 ComputeJuliaSetAtOffset(result, a, offset);
             }, lp);
 
-            return FastBitmap.FromByteArray(result, bounds.ViewportWidth, bounds.ViewportHeight);
+            return BitmapUtility.FromByteArray(result, bounds.ViewportWidth, bounds.ViewportHeight);
         }
 
         // GPU: Allocating Memory on GPU only!
@@ -109,7 +109,7 @@ namespace Mandelbrot
                 ComputeJuliaSetAtOffset(deviceResult, c, offset);
             }, lp);
 
-            return FastBitmap.FromByteArray(Gpu.CopyToHost(deviceResult), bounds.ViewportWidth, bounds.ViewportHeight);
+            return BitmapUtility.FromByteArray(Gpu.CopyToHost(deviceResult), bounds.ViewportWidth, bounds.ViewportHeight);
         }
 
         // GPU: Parallel.For!
@@ -134,7 +134,7 @@ namespace Mandelbrot
                 ComputeJuliaSetAtOffset(result, c, offset);
             });
 
-            return FastBitmap.FromByteArray(result, bounds.ViewportWidth, bounds.ViewportHeight);
+            return BitmapUtility.FromByteArray(result, bounds.ViewportWidth, bounds.ViewportHeight);
         }
 
         // ReSharper disable once SuggestBaseTypeForParameter

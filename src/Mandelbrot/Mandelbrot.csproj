@@ -74,11 +74,13 @@
     <Reference Include="System.Drawing" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Core\BitmapUtility.cs" />
     <Compile Include="Core\Bounds.cs" />
     <Compile Include="Core\Complex.cs" />
     <Compile Include="Core\FastBitmap.cs" />
     <Compile Include="Core\Julia.cs" />
-    <Compile Include="Core\Mandelbrot.cs" />
+    <Compile Include="Core\MandelbrotCpu.cs" />
+    <Compile Include="Core\MandelbrotGpu.cs" />
     <Compile Include="Program.cs" />
   </ItemGroup>
   <ItemGroup>

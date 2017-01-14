@@ -1,7 +1,6 @@
 using System;
 using System.Drawing;
 using System.Drawing.Imaging;
-using System.Runtime.InteropServices;
 
 namespace Mandelbrot
 {
@@ -24,15 +23,6 @@ namespace Mandelbrot
         //{
         //    _bitmap.UnlockBits(_data);
         //}
-
-        internal static Image FromByteArray(byte[] data, int width, int height)
-        {
-            var pinnedData = GCHandle.Alloc(data, GCHandleType.Pinned);
-            var result = new Bitmap(width, height, 3 * width * sizeof(byte), PixelFormat, pinnedData.AddrOfPinnedObject());
-
-            pinnedData.Free();
-            return result;
-        }
 
         internal unsafe void SetPixel(int x, int y, Color color)
         {
