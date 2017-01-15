@@ -37,7 +37,7 @@ namespace Mandelbrot
             Measure(() => MandelbrotCpu.Render1(bounds1), "mandelbrot.cpu.1.png", false, "CPU: Native GDI+ Bitmap!");
             Measure(() => MandelbrotCpu.Render2(bounds1), "mandelbrot.cpu.2.png", false, "CPU: Byte Array!");
 
-            Measure(() => MandelbrotGpu.RenderGpu1(bounds1), "mandelbrot.gpu.3.png", true, "GPU: Alea Parallel Linq!!");
+            Measure(() => MandelbrotGpu.RenderGpu1(bounds1), "mandelbrot.gpu.1.png", true, "GPU: Alea Parallel Linq!!");
             Measure(() => MandelbrotGpu.RenderGpu2(bounds1), "mandelbrot.gpu.2.png", true, "GPU: Custom!");
 
             //Measure(() => Julia.RenderCpu1(bounds2), "julia.cpu.1.png", false, "CPU: (Julia) Native GDI+ Bitmap!");

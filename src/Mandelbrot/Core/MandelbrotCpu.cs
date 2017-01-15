@@ -6,6 +6,9 @@ namespace Mandelbrot
 {
     internal static class MandelbrotCpu
     {
+        // Todo: Rename!
+        private const int ColorComponents = 3;
+
         // Native GDI+ Bitmap!
         internal static Image Render1(Bounds bounds)
         {
@@ -38,7 +41,7 @@ namespace Mandelbrot
             var width = bounds.ViewportWidth;
             var height = bounds.ViewportHeight;
             var scale = (bounds.XMax - bounds.XMin) / width;
-            var result = new byte[3 * width * height];
+            var result = new byte[ColorComponents * width * height];
 
             Parallel.For(0, height, y =>
             {
@@ -49,7 +52,7 @@ namespace Mandelbrot
                     ComputeMandelbrotAtOffset(c, i =>
                     {
                         // ReSharper disable once AccessToModifiedClosure
-                        var offset = 3 * (y * width + x);
+                        var offset = ColorComponents * (y * width + x);
 
                         result[offset + 0] = i;
                         result[offset + 1] = i;

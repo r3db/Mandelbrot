@@ -9,6 +9,9 @@ namespace Mandelbrot
     // Todo: Use Fixed Blocks!
     internal static class MandelbrotGpu
     {
+        // Todo: Rename!
+        private const int ColorComponents = 3;
+
         // Alea Parallel Linq!
         internal static Image RenderGpu1(Bounds bounds)
         {
@@ -18,7 +21,7 @@ namespace Mandelbrot
             var height = bounds.ViewportHeight;
             var scale = (bounds.XMax - bounds.XMin) / width;
 
-            var resultLength = 3 * width * height;
+            var resultLength = ColorComponents * width * height;
             var resultMemory = Gpu.Default.AllocateDevice<byte>(resultLength);
             var resultDevPtr = new deviceptr<byte>(resultMemory.Handle);
 
@@ -26,16 +29,19 @@ namespace Mandelbrot
             {
                 var x = i % width;
                 var y = i / width;
-                var offset = 3 * i;
+                var offset = ColorComponents * i;
 
-                // ReSharper disable once PossibleLossOfFraction
-                var c = new Complex
+                if (offset < resultLength)
                 {
-                    Real      = bounds.XMin + x * scale,
-                    Imaginary = bounds.YMin + y * scale,
-                };
+                    // ReSharper disable once PossibleLossOfFraction
+                    var c = new Complex
+                    {
+                        Real      = bounds.XMin + x * scale,
+                        Imaginary = bounds.YMin + y * scale,
+                    };
 
-                ComputeMandelbrotAtOffset(resultDevPtr, c, offset);
+                    ComputeMandelbrotAtOffset(resultDevPtr, c, offset);
+                }
             });
 
             return BitmapUtility.FromByteArray(Gpu.CopyToHost(resultMemory), width, height);
@@ -50,7 +56,7 @@ namespace Mandelbrot
             var height = bounds.ViewportHeight;
             var scale = (bounds.XMax - bounds.XMin) / width;
 
-            var resultLength = 3 * width * height;
+            var resultLength = ColorComponents * width * height;
             var resultMemory = Gpu.Default.AllocateDevice<byte>(resultLength);
             var resultDevPtr = new deviceptr<byte>(resultMemory.Handle);
 
@@ -60,7 +66,7 @@ namespace Mandelbrot
             {
                 var x = blockDim.x * blockIdx.x + threadIdx.x;
                 var y = blockDim.y * blockIdx.y + threadIdx.y;
-                var offset = 3 * (y * width + x);
+                var offset = ColorComponents * (y * width + x);
 
                 if (offset < resultLength)
                 {
@@ -101,6 +107,7 @@ namespace Mandelbrot
             const int tpb = 32;
             var width = bounds.ViewportWidth;
             var height = bounds.ViewportHeight;
+
             return new LaunchParam(new dim3((width + (tpb - 1)) / tpb, (height + (tpb - 1)) / tpb), new dim3(tpb, tpb));
         }
     }
