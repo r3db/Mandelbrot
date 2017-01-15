@@ -45,7 +45,7 @@ namespace Mandelbrot
             Measure(() => JuliaCpu.Render1(bounds2), "julia.cpu.1.png", false, "CPU: Native GDI+ Bitmap!");
             Measure(() => JuliaCpu.Render2(bounds2), "julia.cpu.2.png", false, "CPU: Byte Array!");
 
-            Measure(() => JuliaGpu.Render1(bounds2), "julia.gpu.3.png", true, "GPU: Alea Parallel.For!");
+            Measure(() => JuliaGpu.Render1(bounds2), "julia.gpu.1.png", true, "GPU: Alea Parallel.For!");
             Measure(() => JuliaGpu.Render2(bounds2), "julia.gpu.2.png", true, "GPU: Custom!");
 
             Console.WriteLine("Done!");
