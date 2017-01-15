@@ -6,7 +6,6 @@ namespace Mandelbrot
 {
     internal static class MandelbrotCpu
     {
-        // Todo: Rename!
         private const int ColorComponents = 3;
 
         // Native GDI+ Bitmap!

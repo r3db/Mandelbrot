@@ -9,7 +9,6 @@ namespace Mandelbrot
     // Todo: Use Fixed Blocks!
     internal static class MandelbrotGpu
     {
-        // Todo: Rename!
         private const int ColorComponents = 3;
 
         // Alea Parallel Linq!
