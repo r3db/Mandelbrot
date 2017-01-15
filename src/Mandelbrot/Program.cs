@@ -24,15 +24,15 @@ namespace Mandelbrot
                 YMax = +1.0f,
             };
 
-            //var bounds2 = new Bounds
-            //{
-            //    ViewportWidth  = width,
-            //    ViewportHeight = height,
-            //    XMin = -1.0f,
-            //    XMax = +1.0f,
-            //    YMin = -1.0f,
-            //    YMax = +1.0f,
-            //};
+            var bounds2 = new Bounds
+            {
+                ViewportWidth = width,
+                ViewportHeight = height,
+                XMin = -1.0f,
+                XMax = +1.0f,
+                YMin = -1.0f,
+                YMax = +1.0f,
+            };
 
             Measure(() => MandelbrotCpu.Render1(bounds1), "mandelbrot.cpu.1.png", false, "CPU: Native GDI+ Bitmap!");
             Measure(() => MandelbrotCpu.Render2(bounds1), "mandelbrot.cpu.2.png", false, "CPU: Byte Array!");
@@ -40,8 +40,11 @@ namespace Mandelbrot
             Measure(() => MandelbrotGpu.RenderGpu1(bounds1), "mandelbrot.gpu.1.png", true, "GPU: Alea Parallel Linq!!");
             Measure(() => MandelbrotGpu.RenderGpu2(bounds1), "mandelbrot.gpu.2.png", true, "GPU: Custom!");
 
-            //Measure(() => Julia.RenderCpu1(bounds2), "julia.cpu.1.png", false, "CPU: (Julia) Native GDI+ Bitmap!");
-            //Measure(() => Julia.RenderCpu2(bounds2), "julia.cpu.2.png", false, "CPU: (Julia) Byte Array!");
+            // ---------------------------------------------------------------------------------------------------------
+
+            Measure(() => JuliaCpu.Render1(bounds2), "julia.cpu.1.png", false, "CPU: Native GDI+ Bitmap!");
+            Measure(() => JuliaCpu.Render2(bounds2), "julia.cpu.2.png", false, "CPU: Byte Array!");
+
             //Measure(() => Julia.RenderGpu1(bounds2), "julia.gpu.1.png", true, "GPU: (Julia) Byte Array!");
             //Measure(() => Julia.RenderGpu2(bounds2), "julia.gpu.2.png", true, "GPU: (Julia) Allocating Memory on GPU only!");
             //Measure(() => Julia.RenderGpu3(bounds2), "julia.gpu.3.png", true, "GPU: (Julia) Parallel.For!");
