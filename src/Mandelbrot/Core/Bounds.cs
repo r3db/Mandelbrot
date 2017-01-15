@@ -5,8 +5,8 @@ namespace Mandelbrot
     internal struct Bounds
     {
         // Todo: Should we promote these to Properties!?
-        public int ViewportWidth;
-        public int ViewportHeight;
+        public int Width;
+        public int Height;
 
         public float XMin;
         public float XMax;
@@ -15,16 +15,16 @@ namespace Mandelbrot
 
         public void AdjustAspectRatio()
         {
-            var vr = ViewportHeight / (float)ViewportWidth;
+            var vr = Height / (float)Width;
             var gr = (YMax - YMin) / (XMax - XMin);
 
             var xd = gr > vr
-                ? (ViewportWidth * ((YMax - YMin) / ViewportHeight) - (XMax - XMin)) * 0.5f
+                ? (Width * ((YMax - YMin) / Height) - (XMax - XMin)) * 0.5f
                 : 0f;
 
             var yd = gr > vr
                 ? 0f
-                : (ViewportHeight * ((XMax - XMin) / ViewportWidth) - (YMax - YMin)) * 0.5f;
+                : (Height * ((XMax - XMin) / Width) - (YMax - YMin)) * 0.5f;
 
             XMin -= xd;
             XMax += xd;

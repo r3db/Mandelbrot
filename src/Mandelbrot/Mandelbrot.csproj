@@ -78,10 +78,10 @@
     <Compile Include="Core\Bounds.cs" />
     <Compile Include="Core\Complex.cs" />
     <Compile Include="Core\FastBitmap.cs" />
-    <Compile Include="Core\JuliaGpu.cs" />
-    <Compile Include="Core\JuliaCpu.cs" />
-    <Compile Include="Core\MandelbrotCpu.cs" />
-    <Compile Include="Core\MandelbrotGpu.cs" />
+    <Compile Include="JuliaGpu.cs" />
+    <Compile Include="JuliaCpu.cs" />
+    <Compile Include="MandelbrotCpu.cs" />
+    <Compile Include="MandelbrotGpu.cs" />
     <Compile Include="Program.cs" />
   </ItemGroup>
   <ItemGroup>

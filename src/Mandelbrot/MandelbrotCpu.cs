@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace Mandelbrot
 {
-    internal static class JuliaCpu
+    internal static class MandelbrotCpu
     {
         private const int ColorComponents = 3;
 
@@ -13,8 +13,8 @@ namespace Mandelbrot
         {
             bounds.AdjustAspectRatio();
 
-            var width = bounds.ViewportWidth;
-            var height = bounds.ViewportHeight;
+            var width  = bounds.Width;
+            var height = bounds.Height;
             var scale = (bounds.XMax - bounds.XMin) / width;
             var result = new FastBitmap(width, height);
 
@@ -25,7 +25,7 @@ namespace Mandelbrot
                     var c = new Complex(bounds.XMin + x * scale, bounds.YMin + y * scale);
 
                     // ReSharper disable once AccessToModifiedClosure
-                    ComputeJuliaSetAtOffset(c, i => result.SetPixel(x, y, Color.FromArgb(i, i, i)));
+                    ComputeMandelbrotAtOffset(c, i => result.SetPixel(x, y, Color.FromArgb(i, i, i)));
                 }
             });
 
@@ -37,8 +37,8 @@ namespace Mandelbrot
         {
             bounds.AdjustAspectRatio();
 
-            var width = bounds.ViewportWidth;
-            var height = bounds.ViewportHeight;
+            var width = bounds.Width;
+            var height = bounds.Height;
             var scale = (bounds.XMax - bounds.XMin) / width;
             var result = new byte[ColorComponents * width * height];
 
@@ -48,8 +48,9 @@ namespace Mandelbrot
                 {
                     var c = new Complex(bounds.XMin + x * scale, bounds.YMin + y * scale);
 
-                    ComputeJuliaSetAtOffset(c, i =>
+                    ComputeMandelbrotAtOffset(c, i =>
                     {
+                        // ReSharper disable once AccessToModifiedClosure
                         var offset = ColorComponents * (y * width + x);
 
                         result[offset + 0] = i;
@@ -62,20 +63,16 @@ namespace Mandelbrot
             return BitmapUtility.FromByteArray(result, width, height);
         }
 
-        // ReSharper disable once SuggestBaseTypeForParameter
-        private static void ComputeJuliaSetAtOffset(Complex a, Action<byte> action)
+        // Helpers!
+        private static void ComputeMandelbrotAtOffset(Complex c, Action<byte> action)
         {
-            var c = new Complex
-            {
-                Real      = -0.8f,
-                Imaginary = +0.156f,
-            };
+            var z = c;
 
             for (byte i = 0; i < 255; ++i)
             {
-                a = a * a + c;
+                z = z * z + c;
 
-                if (a.Magnitude() >= 2)
+                if (z.Magnitude() >= 2)
                 {
                     action(i);
                     break;

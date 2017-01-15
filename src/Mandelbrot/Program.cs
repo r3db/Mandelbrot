@@ -16,8 +16,8 @@ namespace Mandelbrot
 
             var bounds1 = new Bounds
             {
-                ViewportWidth  = width,
-                ViewportHeight = height,
+                Width  = width,
+                Height = height,
                 XMin = -2.2f,
                 XMax = +1.0f,
                 YMin = -1.0f,
@@ -26,8 +26,8 @@ namespace Mandelbrot
 
             var bounds2 = new Bounds
             {
-                ViewportWidth = width,
-                ViewportHeight = height,
+                Width = width,
+                Height = height,
                 XMin = -1.0f,
                 XMax = +1.0f,
                 YMin = -1.0f,
