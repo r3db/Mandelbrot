@@ -78,7 +78,7 @@
     <Compile Include="Core\Bounds.cs" />
     <Compile Include="Core\Complex.cs" />
     <Compile Include="Core\FastBitmap.cs" />
-    <Compile Include="Core\Julia.cs" />
+    <Compile Include="Core\JuliaGpu.cs" />
     <Compile Include="Core\JuliaCpu.cs" />
     <Compile Include="Core\MandelbrotCpu.cs" />
     <Compile Include="Core\MandelbrotGpu.cs" />

@@ -7,12 +7,12 @@ using Alea.Parallel;
 namespace Mandelbrot
 {
     // Todo: Use Fixed Blocks!
-    internal static class MandelbrotGpu
+    internal static class JuliaGpu
     {
         private const int ColorComponents = 3;
 
         // Alea Parallel.For!
-        internal static Image RenderGpu1(Bounds bounds)
+        internal static Image Render1(Bounds bounds)
         {
             bounds.AdjustAspectRatio();
 
@@ -32,22 +32,21 @@ namespace Mandelbrot
 
                 if (offset < resultLength)
                 {
-                    // ReSharper disable once PossibleLossOfFraction
                     var c = new Complex
                     {
                         Real      = bounds.XMin + x * scale,
                         Imaginary = bounds.YMin + y * scale,
                     };
 
-                    ComputeMandelbrotAtOffset(resultDevPtr, c, offset);
-                }
+                    ComputeJuliaSetAtOffset(resultDevPtr, c, offset);
+                }                
             });
 
             return BitmapUtility.FromByteArray(Gpu.CopyToHost(resultMemory), width, height);
         }
 
-        // Custom!
-        internal static Image RenderGpu2(Bounds bounds)
+        // GPU: Custom!
+        internal static Image Render2(Bounds bounds)
         {
             bounds.AdjustAspectRatio();
 
@@ -60,38 +59,39 @@ namespace Mandelbrot
             var resultDevPtr = new deviceptr<byte>(resultMemory.Handle);
 
             var lp = ComputeLaunchParameters(bounds);
-            
+
             Gpu.Default.Launch(() =>
             {
                 var x = blockDim.x * blockIdx.x + threadIdx.x;
                 var y = blockDim.y * blockIdx.y + threadIdx.y;
-                var offset = ColorComponents * (y * width + x);
+                var offset = ColorComponents * (y * bounds.ViewportWidth + x);
 
-                if (offset < resultLength)
+                var c = new Complex
                 {
-                    var c = new Complex
-                    {
-                        Real      = bounds.XMin + x * scale,
-                        Imaginary = bounds.YMin + y * scale,
-                    };
+                    Real      = bounds.XMin + x * scale,
+                    Imaginary = bounds.YMin + y * scale,
+                };
 
-                    ComputeMandelbrotAtOffset(resultDevPtr, c, offset);
-                }
+                ComputeJuliaSetAtOffset(resultDevPtr, c, offset);
             }, lp);
 
             return BitmapUtility.FromByteArray(Gpu.CopyToHost(resultMemory), width, height);
         }
-        
-        // Helpers!
-        private static void ComputeMandelbrotAtOffset(deviceptr<byte> result, Complex c, int offset)
+
+        // ReSharper disable once SuggestBaseTypeForParameter
+        private static void ComputeJuliaSetAtOffset(deviceptr<byte> result, Complex a, int offset)
         {
-            var z = c;
+            var c = new Complex
+            {
+                Real       = -0.8f,
+                Imaginary = +0.156f,
+            };
 
             for (byte i = 0; i < 255; ++i)
             {
-                z = z * z + c;
+                a = a * a + c;
 
-                if (z.Magnitude() >= 2)
+                if (a.Magnitude() >= 2)
                 {
                     result[offset + 0] = i;
                     result[offset + 1] = i;
@@ -106,7 +106,6 @@ namespace Mandelbrot
             const int tpb = 32;
             var width = bounds.ViewportWidth;
             var height = bounds.ViewportHeight;
-
             return new LaunchParam(new dim3((width + (tpb - 1)) / tpb, (height + (tpb - 1)) / tpb), new dim3(tpb, tpb));
         }
     }
