@@ -34,8 +34,8 @@ namespace Mandelbrot
                 YMax = +1.0f,
             };
 
-            Measure(() => MandelbrotCpu.Render1(bounds1), "mandelbrot.cpu.1.png", false, "CPU: Native GDI+ Bitmap!  [Mandelbrot]");
-            Measure(() => MandelbrotCpu.Render2(bounds1), "mandelbrot.cpu.2.png", false, "CPU: Byte Array!          [Mandelbrot]");
+            Measure(() => MandelbrotCpu.Render1(bounds1), "mandelbrot.cpu.1.png", false,   "CPU: Native GDI+ Bitmap!  [Mandelbrot]");
+            Measure(() => MandelbrotCpu.Render2(bounds1), "mandelbrot.cpu.2.png", false,   "CPU: Byte Array!          [Mandelbrot]");
 
             Measure(() => MandelbrotGpu.RenderGpu1(bounds1), "mandelbrot.gpu.1.png", true, "GPU: Alea Parallel.For!   [Mandelbrot]");
             Measure(() => MandelbrotGpu.RenderGpu2(bounds1), "mandelbrot.gpu.2.png", true, "GPU: Custom!              [Mandelbrot]");
@@ -45,8 +45,8 @@ namespace Mandelbrot
             Measure(() => JuliaCpu.Render1(bounds2), "julia.cpu.1.png", false, "CPU: Native GDI+ Bitmap!       [Julia]");
             Measure(() => JuliaCpu.Render2(bounds2), "julia.cpu.2.png", false, "CPU: Byte Array!               [Julia]");
 
-            Measure(() => JuliaGpu.Render1(bounds2), "julia.gpu.1.png", true, "GPU: Alea Parallel.For!        [Julia]");
-            Measure(() => JuliaGpu.Render2(bounds2), "julia.gpu.2.png", true, "GPU: Custom!                   [Julia]");
+            Measure(() => JuliaGpu.Render1(bounds2), "julia.gpu.1.png", true,  "GPU: Alea Parallel.For!        [Julia]");
+            Measure(() => JuliaGpu.Render2(bounds2), "julia.gpu.2.png", true,  "GPU: Custom!                   [Julia]");
 
             Console.WriteLine("Done!");
             Console.ReadLine();
