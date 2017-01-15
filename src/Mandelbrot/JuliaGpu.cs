@@ -45,7 +45,7 @@ namespace Mandelbrot
             return BitmapUtility.FromByteArray(Gpu.CopyToHost(resultMemory), width, height);
         }
 
-        // GPU: Custom!
+        // Custom!
         internal static Image Render2(Bounds bounds)
         {
             bounds.AdjustAspectRatio();
@@ -78,16 +78,15 @@ namespace Mandelbrot
             return BitmapUtility.FromByteArray(Gpu.CopyToHost(resultMemory), width, height);
         }
 
-        // ReSharper disable once SuggestBaseTypeForParameter
         private static void ComputeJuliaSetAtOffset(deviceptr<byte> result, Complex a, int offset)
         {
             var c = new Complex
             {
-                Real       = -0.8f,
+                Real      = -0.8f,
                 Imaginary = +0.156f,
             };
 
-            for (byte i = 0; i < 255; ++i)
+            for (byte i = 0; i < byte.MaxValue; ++i)
             {
                 a = a * a + c;
 

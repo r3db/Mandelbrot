@@ -88,7 +88,7 @@ namespace Mandelbrot
         {
             var z = c;
 
-            for (byte i = 0; i < 255; ++i)
+            for (byte i = 0; i < byte.MaxValue; ++i)
             {
                 z = z * z + c;
 
