@@ -106,8 +106,9 @@ namespace Mandelbrot
 
         private static LaunchParam ComputeLaunchParameters(Bounds bounds)
         {
-            const int tpb = 256;
-            return new LaunchParam((ColorComponents * bounds.Width * bounds.Height + (tpb - 1)) / tpb, tpb);
+            return LaunchParam.AutoByBlockSizeLimit(512);
+            //const int tpb = 256;
+            //return new LaunchParam((ColorComponents * bounds.Width * bounds.Height + (tpb - 1)) / tpb, tpb);
         }
     }
 }
