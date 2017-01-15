@@ -71,7 +71,7 @@ namespace Mandelbrot
                 {
                     var c = new Complex
                     {
-                        Real = bounds.XMin + x * scale,
+                        Real      = bounds.XMin + x * scale,
                         Imaginary = bounds.YMin + y * scale,
                     };
 
