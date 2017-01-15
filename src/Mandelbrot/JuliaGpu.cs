@@ -62,17 +62,21 @@ namespace Mandelbrot
 
             Gpu.Default.Launch(() =>
             {
-                var x = blockDim.x * blockIdx.x + threadIdx.x;
-                var y = blockDim.y * blockIdx.y + threadIdx.y;
-                var offset = ColorComponents * (y * bounds.Width + x);
+                var i = blockDim.x * blockIdx.x + threadIdx.x;
+                var x = i % width;
+                var y = i / width;
+                var offset = ColorComponents * i;
 
-                var c = new Complex
+                if (offset < resultLength)
                 {
-                    Real      = bounds.XMin + x * scale,
-                    Imaginary = bounds.YMin + y * scale,
-                };
+                    var c = new Complex
+                    {
+                        Real = bounds.XMin + x * scale,
+                        Imaginary = bounds.YMin + y * scale,
+                    };
 
-                ComputeJuliaSetAtOffset(resultDevPtr, c, offset);
+                    ComputeJuliaSetAtOffset(resultDevPtr, c, offset);
+                }
             }, lp);
 
             return BitmapUtility.FromByteArray(Gpu.CopyToHost(resultMemory), width, height);
@@ -102,10 +106,8 @@ namespace Mandelbrot
 
         private static LaunchParam ComputeLaunchParameters(Bounds bounds)
         {
-            const int tpb = 32;
-            var width = bounds.Width;
-            var height = bounds.Height;
-            return new LaunchParam(new dim3((width + (tpb - 1)) / tpb, (height + (tpb - 1)) / tpb), new dim3(tpb, tpb));
+            const int tpb = 256;
+            return new LaunchParam((ColorComponents * bounds.Width * bounds.Height + (tpb - 1)) / tpb, tpb);
         }
     }
 }
