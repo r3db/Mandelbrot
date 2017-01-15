@@ -6,7 +6,6 @@ using Alea.Parallel;
 
 namespace Mandelbrot
 {
-    // Todo: Use Fixed Blocks!
     internal static class MandelbrotGpu
     {
         private const int ColorComponents = 3;

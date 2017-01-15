@@ -10,7 +10,7 @@ namespace Mandelbrot
     {
         private static void Main()
         {
-            const int scale  = 1;
+            const int scale  = 4;
             const int width  = scale * 1920;
             const int height = scale * 960;
 
@@ -34,11 +34,12 @@ namespace Mandelbrot
                 YMax = +1.0f,
             };
 
-            Measure(() => MandelbrotCpu.Render1(bounds1), "mandelbrot.cpu.1.png", false,   "CPU: Native GDI+ Bitmap!  [Mandelbrot]");
-            Measure(() => MandelbrotCpu.Render2(bounds1), "mandelbrot.cpu.2.png", false,   "CPU: Byte Array!          [Mandelbrot]");
+            Measure(() => MandelbrotCpu.Render1(bounds1), "mandelbrot.cpu.1.png", false, "CPU: Native GDI+ Bitmap!  [Mandelbrot]");
+            Measure(() => MandelbrotCpu.Render2(bounds1), "mandelbrot.cpu.2.png", false, "CPU: Byte Array!          [Mandelbrot]");
 
-            Measure(() => MandelbrotGpu.RenderGpu1(bounds1), "mandelbrot.gpu.1.png", true, "GPU: Alea Parallel.For!   [Mandelbrot]");
-            Measure(() => MandelbrotGpu.RenderGpu2(bounds1), "mandelbrot.gpu.2.png", true, "GPU: Custom!              [Mandelbrot]");
+            Measure(() => MandelbrotGpu.Render1(bounds1), "mandelbrot.gpu.1.png", true, "GPU: Alea Parallel.For!   [Mandelbrot]");
+            Measure(() => MandelbrotGpu.Render2(bounds1), "mandelbrot.gpu.2.png", true, "GPU: Custom!              [Mandelbrot]");
+            Measure(() => MandelbrotGpu.Render3(bounds1), "mandelbrot.gpu.3.png", true, "GPU: Fixed Block Size!    [Mandelbrot]");
 
             // ---------------------------------------------------------------------------------------------------------
 
@@ -47,6 +48,7 @@ namespace Mandelbrot
 
             Measure(() => JuliaGpu.Render1(bounds2), "julia.gpu.1.png", true,  "GPU: Alea Parallel.For!        [Julia]");
             Measure(() => JuliaGpu.Render2(bounds2), "julia.gpu.2.png", true,  "GPU: Custom!                   [Julia]");
+            Measure(() => JuliaGpu.Render3(bounds2), "julia.gpu.3.png", true,  "GPU: Fixed Block Size!         [Julia]");
 
             Console.WriteLine("Done!");
             Console.ReadLine();

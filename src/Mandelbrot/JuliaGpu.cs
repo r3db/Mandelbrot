@@ -6,7 +6,6 @@ using Alea.Parallel;
 
 namespace Mandelbrot
 {
-    // Todo: Use Fixed Blocks!
     internal static class JuliaGpu
     {
         private const int ColorComponents = 3;
@@ -76,6 +75,46 @@ namespace Mandelbrot
                     };
 
                     ComputeJuliaSetAtOffset(resultDevPtr, c, offset);
+                }
+            }, lp);
+
+            return BitmapUtility.FromByteArray(Gpu.CopyToHost(resultMemory), width, height);
+        }
+
+        // Fixed Block Size!
+        internal static Image Render3(Bounds bounds)
+        {
+            bounds.AdjustAspectRatio();
+
+            var width = bounds.Width;
+            var height = bounds.Height;
+            var scale = (bounds.XMax - bounds.XMin) / width;
+
+            var resultLength = ColorComponents * width * height;
+            var resultMemory = Gpu.Default.AllocateDevice<byte>(resultLength);
+            var resultDevPtr = new deviceptr<byte>(resultMemory.Handle);
+
+            var lp = new LaunchParam(256, 256);
+
+            Gpu.Default.Launch(() =>
+            {
+                var i = blockDim.x * blockIdx.x + threadIdx.x;
+
+                while (ColorComponents * i < resultLength)
+                {
+                    var x = i % width;
+                    var y = i / width;
+                    var offset = ColorComponents * i;
+
+                    var c = new Complex
+                    {
+                        Real = bounds.XMin + x * scale,
+                        Imaginary = bounds.YMin + y * scale,
+                    };
+
+                    ComputeJuliaSetAtOffset(resultDevPtr, c, offset);
+
+                    i += gridDim.x * blockDim.x;
                 }
             }, lp);
 
