@@ -10,7 +10,7 @@ namespace Mandelbrot
     {
         private static void Main()
         {
-            const int scale  = 4;
+            const int scale  = 1;
             const int width  = scale * 1920;
             const int height = scale * 960;
 
@@ -34,19 +34,19 @@ namespace Mandelbrot
                 YMax = +1.0f,
             };
 
-            Measure(() => MandelbrotCpu.Render1(bounds1), "mandelbrot.cpu.1.png", false, "CPU: Native GDI+ Bitmap!");
-            Measure(() => MandelbrotCpu.Render2(bounds1), "mandelbrot.cpu.2.png", false, "CPU: Byte Array!");
+            Measure(() => MandelbrotCpu.Render1(bounds1), "mandelbrot.cpu.1.png", false, "CPU: Native GDI+ Bitmap!  [Mandelbrot]");
+            Measure(() => MandelbrotCpu.Render2(bounds1), "mandelbrot.cpu.2.png", false, "CPU: Byte Array!          [Mandelbrot]");
 
-            Measure(() => MandelbrotGpu.RenderGpu1(bounds1), "mandelbrot.gpu.1.png", true, "GPU: Alea Parallel.For!");
-            Measure(() => MandelbrotGpu.RenderGpu2(bounds1), "mandelbrot.gpu.2.png", true, "GPU: Custom!");
+            Measure(() => MandelbrotGpu.RenderGpu1(bounds1), "mandelbrot.gpu.1.png", true, "GPU: Alea Parallel.For!   [Mandelbrot]");
+            Measure(() => MandelbrotGpu.RenderGpu2(bounds1), "mandelbrot.gpu.2.png", true, "GPU: Custom!              [Mandelbrot]");
 
             // ---------------------------------------------------------------------------------------------------------
 
-            Measure(() => JuliaCpu.Render1(bounds2), "julia.cpu.1.png", false, "CPU: Native GDI+ Bitmap!");
-            Measure(() => JuliaCpu.Render2(bounds2), "julia.cpu.2.png", false, "CPU: Byte Array!");
+            Measure(() => JuliaCpu.Render1(bounds2), "julia.cpu.1.png", false, "CPU: Native GDI+ Bitmap!       [Julia]");
+            Measure(() => JuliaCpu.Render2(bounds2), "julia.cpu.2.png", false, "CPU: Byte Array!               [Julia]");
 
-            Measure(() => JuliaGpu.Render1(bounds2), "julia.gpu.1.png", true, "GPU: Alea Parallel.For!");
-            Measure(() => JuliaGpu.Render2(bounds2), "julia.gpu.2.png", true, "GPU: Custom!");
+            Measure(() => JuliaGpu.Render1(bounds2), "julia.gpu.1.png", true, "GPU: Alea Parallel.For!        [Julia]");
+            Measure(() => JuliaGpu.Render2(bounds2), "julia.gpu.2.png", true, "GPU: Custom!                   [Julia]");
 
             Console.WriteLine("Done!");
             Console.ReadLine();
@@ -73,9 +73,10 @@ namespace Mandelbrot
             var result1 = func();
             sw1.Stop();
 
+            // Todo: Bandwith is not relevant for this problem!
             Func<Stopwatch, string> bandwidth = w => string.Format(CultureInfo.InvariantCulture, "{0,8:F4} GB/s", (result1.Width * result1.Height * 3) / (w.Elapsed.TotalMilliseconds * 1000000));
 
-            Console.WriteLine(new string('-', 49));
+            Console.WriteLine(new string('-', 38));
             Console.WriteLine(description);
             consoleColor();
             Console.WriteLine("{0} - {1} [Cold]", formatElapsedTime(sw1), bandwidth(sw1));
